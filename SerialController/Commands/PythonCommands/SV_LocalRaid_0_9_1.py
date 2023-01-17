@@ -65,6 +65,8 @@ class AutoEncount(ImageProcPythonCommand):
         #注意事項！！！
         #ボールがなくなった時の処理は入れてません。ご注意ください。
         #ボールの変更処理も入れてません。A連打でボールを投げます
+        #aaaaa
+
         
 
         while True:
