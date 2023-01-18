@@ -81,7 +81,7 @@ class AutoRaid(ImageProcPythonCommand):
                 
 
             # 捕まえるか否かの判定
-            is_capture = self.is_capture_pokemon()
+            is_capture = True
             print("レイド開始", "倒せた場合は捕まえます。" if is_capture else "このポケモンは捕まえません。")
 
             # レイド参加
@@ -287,6 +287,7 @@ class AutoRaid(ImageProcPythonCommand):
             if loop_counter > 40:
                 print("Boxを開けませんでした。処理を続行します。")
                 return
+            loop_counter = loop_counter + 1
             time.sleep(0.5)
         print(f"ボックスから{num}匹目を選択。")
 
