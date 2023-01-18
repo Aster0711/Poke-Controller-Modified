@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import time
-from typing import MutableSequence
+from typing import MutableSequence, Tuple
 
 from Commands.PythonCommandBase import PythonCommand, ImageProcPythonCommand
 from Commands.Keys import KeyPress, Button, Direction, Stick, Hat
@@ -214,7 +214,7 @@ class AutoRaid(ImageProcPythonCommand):
         print("合致するタイプがないのでドラゴンタイプとして処理します。")
         return Type.DRAGON
 
-    def decide_myPokemon(self, raidPokemon_type: Type) -> (int, int):
+    def decide_myPokemon(self, raidPokemon_type: Type) -> Tuple[int, int]:
         pokemons: MutableSequence[Pokemon] = [
             {
                 "name": "ニンフィア",
@@ -294,7 +294,7 @@ class AutoRaid(ImageProcPythonCommand):
     #     self.press(Button.A, wait=5.0)
     #     self.press(Direction.UP, wait=1)
 
-    def change_pokemon_from_box(self, coordinate: (int, int)):
+    def change_pokemon_from_box(self, coordinate: Tuple[int, int]):
         time.sleep(1.0)
         self.press(Direction.DOWN, wait=1.0)
         self.press(Button.A, wait=3.0)
