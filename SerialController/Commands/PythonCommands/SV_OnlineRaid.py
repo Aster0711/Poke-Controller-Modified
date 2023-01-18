@@ -304,7 +304,7 @@ class AutoRaid(ImageProcPythonCommand):
             time.sleep(0.5)
         print(f"ボックスから{coordinate}匹目を選択。")
 
-        for _ in range(0, coordinate[0]):
+        for _ in range(1, coordinate[0]):
             self.press(Direction.RIGHT, wait=1.0)
         for _ in range(1, coordinate[1]):
             self.press(Direction.DOWN, wait=1.0)
