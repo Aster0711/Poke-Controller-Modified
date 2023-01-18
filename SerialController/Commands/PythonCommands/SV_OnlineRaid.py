@@ -281,8 +281,12 @@ class AutoRaid(ImageProcPythonCommand):
         self.press(Direction.DOWN, wait=1.0)
         self.press(Button.A, wait=3.0)
 
+        loop_counter = 0
         # ボックス操作
         while not self.isContainTemplate('SV_Raid/raid_box.png', threshold=0.9, use_gray=True, show_value=False):
+            if loop_counter > 40:
+                print("Boxを開けませんでした。処理を続行します。")
+                return
             time.sleep(0.5)
         print(f"ボックスから{num}匹目を選択。")
 
