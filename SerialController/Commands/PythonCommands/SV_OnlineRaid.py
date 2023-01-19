@@ -272,10 +272,10 @@ class AutoRaid(ImageProcPythonCommand):
             },
         ]
 
-        found_pokemon = next((x for x in pokemons if raidPokemon_type in x["types"]), pokemons[0])
+        pokemon_to_use = next((x for x in pokemons if raidPokemon_type in x["types"]), pokemons[0])
 
-        print(f"{found_pokemon['name']}を使用します")
-        return (found_pokemon["x"], found_pokemon["y"])
+        print(f"{pokemon_to_use['name']}を使用します")
+        return (pokemon_to_use["x"], pokemon_to_use["y"])
 
     # def change_pokemon(self, coordinate):
     #     self.press(Direction.DOWN, wait=0.5)
