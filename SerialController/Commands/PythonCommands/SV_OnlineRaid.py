@@ -36,8 +36,8 @@ class Type(enum.Enum):
 
 class Pokemon(TypedDict):
     name: str
-    x: Literal[1, 2, 3, 4, 5, 6]  # for python 3.8 or above, use Literal[1, 2, 3, 4, 5, 6]
-    y: Literal[1, 2, 3, 4, 5]  # for python 3.8 or above, use Literal[1, 2, 3, 4, 5]
+    x: Literal[1, 2, 3, 4, 5, 6]
+    y: Literal[1, 2, 3, 4, 5]
     types: MutableSequence[Type]
 
 class AutoRaid(ImageProcPythonCommand):
