@@ -109,8 +109,8 @@ class AutoEncount(ImageProcPythonCommand):
                 self.wait(4.0) #巣穴沸き待機
                 self.press(Button.A, wait=1.5)
                 loop_num += 1
-                # 30回連続で見つからなかった場合再起動→再帰的に処理を呼び出す
-                if loop_num >= 25:
+                # 20回連続で見つからなかった場合再起動→再帰的に処理を呼び出す
+                if loop_num >= 20:
                     self.recover_error()
                     self.do()
                 
