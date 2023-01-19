@@ -85,10 +85,10 @@ class AutoEncount(ImageProcPythonCommand):
             while not self.isContainTemplate('SV_suana/menu_R.png', threshold=0.8, use_gray=True, show_value=False):
                 menu_while_num += 1
                 print("メニューのwhile")
-                # 待機時間が300秒を越えたとき再起動
-                if menu_while_num >= 300:
+                # 待機時間が約5分を越えたとき再起動
+                if menu_while_num >= 200:
                     self.recover_error()
-                    continue
+                    self.do()
                 if menu_while_num % 15 == 0:
                     print("指定時間以上待機しました。Aボタンをクリックします。")
                     self.press(Button.A, wait=1.0)
@@ -104,15 +104,16 @@ class AutoEncount(ImageProcPythonCommand):
             loop_num = 0
             while not self.isContainTemplate('SV_suana/V_raid.png', threshold=0.7, use_gray=True, show_value=False):
                 print("巣穴のwhile")
-                print("巣穴がないため日付変更をします")
+                print("巣穴がないため日付変更をします。",loop_num,"回目です。")
                 self.dayprogress()
                 self.wait(4.0) #巣穴沸き待機
                 self.press(Button.A, wait=1.5)
                 loop_num += 1
-                # 50回連続で見つからなかった場合再起動
-                if loop_num >= 50:
+                # 30回連続で見つからなかった場合再起動→再帰的に処理を呼び出す
+                if loop_num >= 25:
                     self.recover_error()
-                    continue
+                    self.do()
+                
 
             # 捕まえるか否かの判定
             is_capture = self.is_capture_pokemon()
@@ -155,8 +156,8 @@ class AutoEncount(ImageProcPythonCommand):
             while not self.isContainTemplate('SV_suana/raid_catch.png', threshold=0.95, use_gray=False, show_value=False):
                 print("レイドのwhile")
                 raid_while_num += 1
-                # 待機時間が300秒を越えたとき再起動
-                if raid_while_num >= 300:
+                # 待機時間が約5分を越えたとき再起動→再帰的に処理を呼び出す
+                if raid_while_num >= 200:
                     self.recover_error()
                     self.do()
                 
@@ -218,7 +219,7 @@ class AutoEncount(ImageProcPythonCommand):
                 print("結果待ちのwhile")
                 self.wait(0.5)
                 result_while_num += 0.5
-                # 待機時間が300秒を越えたとき再起動
+                # 待機時間が約5分を越えたとき再起動
                 if result_while_num >= 300:
                     self.recover_error()
                     self.do()
