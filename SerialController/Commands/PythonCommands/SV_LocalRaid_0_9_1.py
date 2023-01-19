@@ -47,6 +47,8 @@ class AutoEncount(ImageProcPythonCommand):
         count = 0
         menu_while_num = 0
         raid_while_num = 0
+        result_while_num = 0
+        loop_num = 0
         lose_counts = []
         # 開始時間を取得（画像ファイル名に用いる）
         t_delta = datetime.timedelta(hours=9)
@@ -83,6 +85,10 @@ class AutoEncount(ImageProcPythonCommand):
             while not self.isContainTemplate('SV_suana/menu_R.png', threshold=0.8, use_gray=True, show_value=False):
                 menu_while_num += 1
                 print("メニューのwhile")
+                # 待機時間が300秒を越えたとき再起動
+                if menu_while_num >= 300:
+                    self.recover_error()
+                    continue
                 if menu_while_num % 15 == 0:
                     print("指定時間以上待機しました。Aボタンをクリックします。")
                     self.press(Button.A, wait=1.0)
@@ -95,12 +101,18 @@ class AutoEncount(ImageProcPythonCommand):
             self.press(Button.Y, wait=5.0)
             self.press(Button.Y, wait=4.0)
             self.press(Button.A, wait=3.0)
+            loop_num = 0
             while not self.isContainTemplate('SV_suana/V_raid.png', threshold=0.7, use_gray=True, show_value=False):
                 print("巣穴のwhile")
                 print("巣穴がないため日付変更をします")
                 self.dayprogress()
                 self.wait(4.0) #巣穴沸き待機
                 self.press(Button.A, wait=1.5)
+                loop_num += 1
+                # 50回連続で見つからなかった場合再起動
+                if loop_num >= 50:
+                    self.recover_error()
+                    continue
 
             # 捕まえるか否かの判定
             is_capture = self.is_capture_pokemon()
@@ -143,6 +155,11 @@ class AutoEncount(ImageProcPythonCommand):
             while not self.isContainTemplate('SV_suana/raid_catch.png', threshold=0.95, use_gray=False, show_value=False):
                 print("レイドのwhile")
                 raid_while_num += 1
+                # 待機時間が300秒を越えたとき再起動
+                if raid_while_num >= 300:
+                    self.recover_error()
+                    self.do()
+                
                 self.wait(1.0)
                 if self.isContainTemplate("SV_Suana/raid_keepon_Y.png", threshold=0.8, use_gray=False, show_value=False) \
                 or self.isContainTemplate("SV_suana/raid_keepon_m.png", threshold=0.8, use_gray=False, show_value=False) \
@@ -196,9 +213,15 @@ class AutoEncount(ImageProcPythonCommand):
             self.press(Button.A, wait=1.0)
             #ボール選ぶ処理を入れるならここ
             #つぎへのAボタン認識するまで待機
+            result_while_num = 0
             while not self.isContainTemplate('SV_suana/raid_A.png', threshold=0.8, use_gray=False, show_value=False):
                 print("結果待ちのwhile")
                 self.wait(0.5)
+                result_while_num += 0.5
+                # 待機時間が300秒を越えたとき再起動
+                if result_while_num >= 300:
+                    self.recover_error()
+                    self.do()
 
             self.wait(2.0)
             self.press(Button.A, wait=1.0)
@@ -364,3 +387,13 @@ class AutoEncount(ImageProcPythonCommand):
         else:
             print('ニンフィアを使用します。')
             return 3
+
+    def recover_error(self):
+        print("エラー状況と判定。再起動します。")
+        self.press(Button.HOME, wait=3.0)
+        self.press(Button.X, wait=5.0)
+        self.press(Button.A, wait=5.0) # ゲーム終了
+        self.press(Button.A, wait=5.0)
+        self.press(Button.A, wait=35.0) # ゲーム起動中
+        self.press(Button.A, wait=40.0) # ゲーム起動
+
