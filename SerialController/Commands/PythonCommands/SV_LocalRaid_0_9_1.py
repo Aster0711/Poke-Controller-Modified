@@ -153,7 +153,7 @@ class AutoEncount(ImageProcPythonCommand):
             #つかまえたが出るまで
             print("倒すまでの処理を実施します")
             turn = 0
-            while not self.isContainTemplate('SV_suana/raid_catch.png', threshold=0.95, use_gray=False, show_value=False):
+            while not self.isContainTemplate('SV_suana/raid_catch.png', threshold=0.9, use_gray=False, show_value=False):
                 print("レイドのwhile")
                 raid_while_num += 1
                 # 待機時間が約5分を越えたとき再起動→再帰的に処理を呼び出す
