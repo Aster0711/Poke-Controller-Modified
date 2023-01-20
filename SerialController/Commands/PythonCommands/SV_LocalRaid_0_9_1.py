@@ -104,7 +104,7 @@ class AutoEncount(ImageProcPythonCommand):
             loop_num = 0
             while not self.isContainTemplate('SV_suana/V_raid.png', threshold=0.7, use_gray=True, show_value=False):
                 print("巣穴のwhile")
-                print("巣穴がないため日付変更をします。",loop_num,"回目です。")
+                print("巣穴がないため日付変更をします。",{loop_num + 1},"回目です。")
                 self.dayprogress()
                 self.wait(4.0) #巣穴沸き待機
                 self.press(Button.A, wait=1.5)
@@ -324,8 +324,14 @@ class AutoEncount(ImageProcPythonCommand):
         self.press(Button.A, wait=3.0)
 
         # ボックス操作
+        loop_num = 0
         while not self.isContainTemplate('SV_Raid/raid_box.png', threshold=0.9, use_gray=True, show_value=False):
             self.wait(0.5)
+            loop_num += 1
+            # 待機時間が約3分を越えたとき再起動
+            if loop_num >= 150:
+                self.recover_error()
+                self.do()
         print(f"ボックスから{num}匹目を選択。")
         self.wait(1.0)
         for _ in range(0, num // 6):
