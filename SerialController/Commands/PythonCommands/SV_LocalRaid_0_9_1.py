@@ -320,7 +320,7 @@ class AutoEncount(ImageProcPythonCommand):
 
     def change_pokemon_from_box(self, num: int):
         self.wait(1.0)
-        self.press(Direction.UP, wait=1.0)  # オンラインとオフラインで「ポケモンをいれかえる」の場所が違うので注意
+        self.press(Direction.UP, wait=1.5)  # オンラインとオフラインで「ポケモンをいれかえる」の場所が違うので注意
         self.press(Button.A, wait=3.0)
 
         # ボックス操作
