@@ -58,7 +58,7 @@ class AutoEncount(ImageProcPythonCommand):
         print("Start", " ", start_time)
 
         #事前設定
-
+        #テーマ：switchのカラーテーマは白
         #手持ち：1匹目眼鏡ニンフィア(1番目の技：はかいこうせん)
         #ボックス：星5以上のとき使用するポケモンをdecide_myPokemonで設定した順番通りにボックスの左上からに配置
         # 1  2  3  4  5  6
@@ -134,6 +134,7 @@ class AutoEncount(ImageProcPythonCommand):
             # レイドポケモンのレベルを判定する
             # 星5以上であればボックスから有利相性のポケモンを選択する
             if self.isContainTemplate('SV_suana/S_Lv5.png', threshold=0.9, use_gray=True, show_value=False) \
+            or self.isContainTemplate('SV_suana/EV_Lv5.png', threshold=0.9, use_gray=False, show_value=False) \
             or self.isContainTemplate('SV_suana/Lv6.png', threshold=0.8, use_gray=False, show_value=False):
                 print("星5以上のレイドです。ボックスから有利タイプのポケモンを選択します。")
 
@@ -334,9 +335,9 @@ class AutoEncount(ImageProcPythonCommand):
                 self.do()
         print(f"ボックスから{num}匹目を選択。")
         self.wait(1.0)
-        for _ in range(0, num // 6):
+        for _ in range(0, num // 7):
             self.press(Direction.DOWN, wait=1.0)
-        for _ in range(1, num % 6):
+        for _ in range(1, num % 7):
             self.press(Direction.RIGHT, wait=1.0)
 
         self.press(Button.A, wait=1)
@@ -355,13 +356,13 @@ class AutoEncount(ImageProcPythonCommand):
         # ラウドボーン(5番目を使うタイプ)
         RAUDOBON = [Type.GRASS, Type.BUG]
         # マリルリ(6番目を使うタイプ)
-        MARIRURI = [Type.FIRE, Type.GROUND]
+        MARIRURI = [Type.GROUND]
         # ハバタクカミ(7番目を使うタイプ)
         HABATAKUKAMI= [Type.PSYCHIC, Type.GHOST] 
         # ドドゲザン(8番目を使うタイプ)
         DODOGEZAN = [Type.FAIRY]
         # ガブリアス(9番目を使うタイプ)
-        GABURIASU = [Type.ELECTRIC]
+        GABURIASU = [Type.ELECTRIC, Type.FIRE]
 
         if raidPokemon_type in NINFIA:
             print('ニンフィアを使用します。')
