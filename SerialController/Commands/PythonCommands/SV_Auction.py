@@ -15,6 +15,9 @@ class SV_Money(ImageProcPythonCommand):
         self.buy_flag = False
         self.count = 1
         # self.items = os.listdir("./Template/SV/Auction/items")
+        # 1280×720
+        # switchテーマ：ブラック
+        # マリナードタウン競りの太ったおっさんの前で開始
 
     def do(self):
         while True:
@@ -23,10 +26,14 @@ class SV_Money(ImageProcPythonCommand):
                 self.wait(0.5)
                 self.press(Button.A,0.1,0.5)
             if self.isContainTemplate("SV/Auction/mark.png", 0.8):
-                self.wait(1)
+                self.wait(3)
+                # self.press(Button.A,0.1,0.5)
+                
                 for i in buy_item:
                     if self.isContainTemplate(f"SV/Auction/Item/{i}", 0.8):
                         self.press(Button.A,0.1,2)
+                        now = datetime.datetime.now()
+                        self.camera.saveCapture(filename=f"SV/Auction/got_items/{now.year}-{now.month}-{now.day}-{now.hour}-{now.minute}-{now.second}")
                         while not self.isContainTemplate("SV/Auction/b.png", 0.8):
                             self.press(Button.X,0.1,0.1)
                             self.press(Button.A,0.1,1)
@@ -49,12 +56,14 @@ class SV_Money(ImageProcPythonCommand):
                             while not self.isContainTemplate("SV/Auction/mark.png", 0.8):
                                 self.press(Button.B,0.1,1)
                         self.buy_flag = False
+                        now = datetime.datetime.now()
+                        self.camera.saveCapture(filename=f"SV/Auction/temp/{now.year}-{now.month}-{now.day}-{now.hour}-{now.minute}-{now.second}")
                         # for j in range(len(self.items)):
                         #     if self.isContainTemplate(f"SV/Auction/items/{self.items[j]}",0.8):
                         #         break
                         #     elif self.items[j] == self.items[-1]:
                         #         now = datetime.datetime.now()
-                        #         self.camera.saveCapture(f'./temp/{now.month}-{now.day}-{now.hour}-{now.minute}-{now.second}')
+                        #         self.camera.saveCapture(f"SV/Auction/temp/{now.month}-{now.day}-{now.hour}-{now.minute}-{now.second}")
                         self.time()
             self.wait(1)
 
