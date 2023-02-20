@@ -337,7 +337,7 @@ class AutoEncount(ImageProcPythonCommand):
         self.wait(1.0)
         for _ in range(0, num // 7):
             self.press(Direction.DOWN, wait=1.0)
-        for _ in range(1, num % 7):
+        for _ in range(1, num % 6):
             self.press(Direction.RIGHT, wait=1.0)
 
         self.press(Button.A, wait=1)
