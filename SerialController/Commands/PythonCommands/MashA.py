@@ -8,7 +8,7 @@ from Commands.PythonCommandBase import PythonCommand
 # Mash a button A
 # A連打
 class Mash_A(PythonCommand):
-    NAME = 'A連打'
+    NAME = 'AX連打 オンラインレイド'
 
     def __init__(self):
         super().__init__()
@@ -16,4 +16,6 @@ class Mash_A(PythonCommand):
     def do(self):
         while True:
             self.wait(0.5)
-            self.press(Button.A)
+            self.press(Button.A)            
+            self.wait(0.5)
+            self.press(Button.X)

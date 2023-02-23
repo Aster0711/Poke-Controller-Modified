@@ -102,7 +102,7 @@ class AutoEncount(ImageProcPythonCommand):
             self.press(Button.Y, wait=4.0)
             self.press(Button.A, wait=3.0)
             loop_num = 0
-            while not self.isContainTemplate('SV_suana/V_raid.png', threshold=0.7, use_gray=True, show_value=False):
+            while not self.isContainTemplate('SV_suana/Teraraid_battle.png', threshold=0.8, use_gray=False, show_value=False):
                 print("巣穴のwhile")
                 print("巣穴がないため日付変更をします。",{loop_num + 1},"回目です。")
                 self.dayprogress()
