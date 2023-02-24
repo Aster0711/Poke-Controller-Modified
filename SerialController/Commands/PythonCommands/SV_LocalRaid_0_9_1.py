@@ -313,7 +313,8 @@ class AutoEncount(ImageProcPythonCommand):
         return Type.WATER
     
     def choose_raidPokemon_type(self, type: Type):
-        progress_raid_type = [
+        # レイドを実行するタイプ
+        execute_raid_type = [
                         Type.FIRE,
                         Type.WATER,
                         Type.ELECTRIC,
@@ -327,7 +328,8 @@ class AutoEncount(ImageProcPythonCommand):
                         Type.DRAGON,
                         Type.STEEL
                         ]
-        not_progress_raid_type = [
+        # レイドを行わず日付変更するタイプ
+        skip_raid_type = [
                         Type.NORMAL,
                         Type.GRASS,
                         Type.FIGHTING, 
@@ -335,11 +337,11 @@ class AutoEncount(ImageProcPythonCommand):
                         Type.DARK, 
                         Type.FAIRY
                         ]
-        if type in progress_raid_type:
-            print(type.value + "タイプなのでレイドバトル開始に進みます")
+        if type in execute_raid_type:
+            print(type.value + "なのでレイドバトル開始に進みます")
             return True
-        elif type in not_progress_raid_type:
-            print(type.value + "タイプなので日付変更を行います")
+        elif type in skip_raid_type:
+            print(type.value + "なので日付変更を行います")
             return False
         else:
             print("日付変更を行います")
