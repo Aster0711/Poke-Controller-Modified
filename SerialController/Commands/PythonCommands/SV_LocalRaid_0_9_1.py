@@ -117,6 +117,7 @@ class AutoEncount(ImageProcPythonCommand):
 
             while True:
                 print("巣穴のwhile")
+                loop_num += 1
                 self.press(Button.A, wait=1.5)
                 if self.isContainTemplate('SV_suana/Teraraid_battle.png', threshold=0.8, use_gray=False, show_value=False):
                     # レイドポケモンのタイプを判定する
@@ -129,7 +130,7 @@ class AutoEncount(ImageProcPythonCommand):
                         # 合致しなかった場合レイドの画面を抜けた上で日付変更を続ける
                         self.press(Button.B, wait=1.5)
                         self.press(Button.B, wait=1.5) # 入力抜け防止
-                        print("日付変更をします。",loop_num + 1,"回目です。")
+                        print("日付変更をします。",loop_num,"回目です。")
                         self.dayprogress()
                         self.wait(4.0) #巣穴沸き待機
                         continue
@@ -138,7 +139,7 @@ class AutoEncount(ImageProcPythonCommand):
                     self.recover_error()
                     self.do()
                 else:
-                    print("巣穴がないため日付変更をします。",loop_num + 1,"回目です。")
+                    print("巣穴がないため日付変更をします。",loop_num,"回目です。")
                     self.dayprogress()
                     self.wait(4.0) #巣穴沸き待機
                     continue
@@ -326,7 +327,6 @@ class AutoEncount(ImageProcPythonCommand):
                         Type.ROCK,
                         Type.GHOST,
                         Type.DRAGON,
-                        Type.STEEL
                         ]
         # レイドを行わず日付変更するタイプ
         skip_raid_type = [
@@ -335,6 +335,7 @@ class AutoEncount(ImageProcPythonCommand):
                         Type.FIGHTING, 
                         Type.POISON, 
                         Type.DARK, 
+                        Type.STEEL,
                         Type.FAIRY
                         ]
         if type in execute_raid_type:
