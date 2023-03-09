@@ -134,7 +134,7 @@ class AutoEncount(ImageProcPythonCommand):
                         self.dayprogress()
                         self.wait(4.0) #巣穴沸き待機
                         continue
-                if loop_num >= 20:
+                if loop_num >= 300:
                     # 20回連続で見つからなかった場合再起動→再帰的に処理を呼び出す
                     self.recover_error()
                     self.do()
@@ -317,26 +317,26 @@ class AutoEncount(ImageProcPythonCommand):
         # レイドを実行するタイプ
         execute_raid_type = [
                         Type.FIRE,
+                        Type.NORMAL,
                         Type.WATER,
                         Type.ELECTRIC,
+                        Type.GRASS,
+                        Type.FIGHTING, 
                         Type.ICE, 
                         Type.GROUND,
-                        Type.FLYING,
-                        Type.PSYCHIC,
                         Type.BUG,
+                        Type.FLYING,
+                        Type.POISON, 
                         Type.ROCK,
+                        Type.PSYCHIC,
                         Type.GHOST,
+                        Type.DARK, 
+                        Type.STEEL,
                         Type.DRAGON,
+                        Type.FAIRY
                         ]
         # レイドを行わず日付変更するタイプ
         skip_raid_type = [
-                        Type.NORMAL,
-                        Type.GRASS,
-                        Type.FIGHTING, 
-                        Type.POISON, 
-                        Type.DARK, 
-                        Type.STEEL,
-                        Type.FAIRY
                         ]
         if type in execute_raid_type:
             print(type.value + "なのでレイドバトル開始に進みます")
@@ -403,9 +403,11 @@ class AutoEncount(ImageProcPythonCommand):
                 self.do()
         print(f"ボックスから{num}匹目を選択。")
         self.wait(1.0)
-        for _ in range(0, num // 7):
+        press_down_count = (num - 1) // 6
+        for _ in range(0, press_down_count):
             self.press(Direction.DOWN, wait=1.0)
-        for _ in range(1, num % 6):
+        press_right_count = (num - 1) % 6
+        for _ in range(0, press_right_count):
             self.press(Direction.RIGHT, wait=1.0)
 
         self.press(Button.A, wait=1)
@@ -472,4 +474,5 @@ class AutoEncount(ImageProcPythonCommand):
         self.press(Button.A, wait=5.0)
         self.press(Button.A, wait=35.0) # ゲーム起動中
         self.press(Button.A, wait=40.0) # ゲーム起動
+        self.dayprogress()
 
