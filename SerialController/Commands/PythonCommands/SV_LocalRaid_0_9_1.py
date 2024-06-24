@@ -100,36 +100,65 @@ class AutoEncount(ImageProcPythonCommand):
             self.press(Button.B, wait=2.0)
             self.press(Button.Y, wait=5.0)
             self.press(Button.Y, wait=4.0)
-            self.press(Button.A, wait=3.0)
+            # self.press(Button.A, wait=3.0)
             loop_num = 0
-            while not self.isContainTemplate('SV_suana/Teraraid_battle.png', threshold=0.8, use_gray=False, show_value=False):
+
+            # while not self.isContainTemplate('SV_suana/Teraraid_battle.png', threshold=0.8, use_gray=False, show_value=False):
+            #     print("巣穴のwhile")
+            #     print("巣穴がないため日付変更をします。",{loop_num + 1},"回目です。")
+            #     self.dayprogress()
+            #     self.wait(4.0) #巣穴沸き待機
+            #     self.press(Button.A, wait=1.5)
+            #     loop_num += 1
+            #     # 20回連続で見つからなかった場合再起動→再帰的に処理を呼び出す
+            #     if loop_num >= 20:
+            #         self.recover_error()
+            #         self.do()
+
+            while True:
                 print("巣穴のwhile")
-                print("巣穴がないため日付変更をします。",{loop_num + 1},"回目です。")
-                self.dayprogress()
-                self.wait(4.0) #巣穴沸き待機
-                self.press(Button.A, wait=1.5)
                 loop_num += 1
-                # 20回連続で見つからなかった場合再起動→再帰的に処理を呼び出す
-                if loop_num >= 20:
+                self.press(Button.A, wait=1.5)
+                if self.isContainTemplate('SV_suana/Teraraid_battle.png', threshold=0.8, use_gray=False, show_value=False):
+                    # レイドポケモンのタイプを判定する
+                    raidPokemon_type = self.judge_raidPokemon_type() 
+                    self.wait(2.0)
+                    if self.choose_raidPokemon_type(raidPokemon_type):
+                        # レイドに進むタイプを選別する：合致した場合whileを抜ける
+                        break
+                    else:
+                        # 合致しなかった場合レイドの画面を抜けた上で日付変更を続ける
+                        self.press(Button.B, wait=1.5)
+                        self.press(Button.B, wait=1.5) # 入力抜け防止
+                        print("日付変更をします。",loop_num,"回目です。")
+                        self.dayprogress()
+                        self.wait(4.0) #巣穴沸き待機
+                        continue
+                if loop_num >= 300:
+                    # 20回連続で見つからなかった場合再起動→再帰的に処理を呼び出す
                     self.recover_error()
                     self.do()
-                
+                else:
+                    print("巣穴がないため日付変更をします。",loop_num,"回目です。")
+                    self.dayprogress()
+                    self.wait(4.0) #巣穴沸き待機
+                    continue
 
             # 捕まえるか否かの判定
             is_capture = self.is_capture_pokemon()
             print("巣穴発見。", "倒せた場合は捕まえます。" if is_capture else "このポケモンは捕まえません。")
             #レイド参加
             count += 1
-            self.camera.saveCapture(filename=f"{start_time_yyyymmddHHMMSS}/{count}")
 
             # ここにcapture画像を、そのままcapturepokemonsに投げ込めるようなサイズに変更する処理を入れる
-
             print("------------レイド開始-------------")
             print("         ",count,"回目のレイドです")
             print("----------------------------------")
 
             # レイドポケモンのタイプを判定する
-            raidPokemon_type = self.judge_raidPokemon_type() 
+            # raidPokemon_type = self.judge_raidPokemon_type() 
+
+            # レイドポケモンのタイプによっては日付変更の処理を行う
 
             # レイドポケモンのレベルを判定する
             # 星5以上であればボックスから有利相性のポケモンを選択する
@@ -148,6 +177,10 @@ class AutoEncount(ImageProcPythonCommand):
                 print("星4以下なので先頭のポケモンで戦います")
                 self.press(Direction.DOWN, wait=1.0)
 
+            # レイドがスタートする直前・使用するポケモンが確定してからスクリーンショット撮影
+            self.camera.saveCapture(filename=f"{start_time_yyyymmddHHMMSS}/{count}")
+
+            # バトルスタート
             self.press(Button.A, wait=1.0)
             self.press(Button.A, wait=1.0) #入力抜け防止
 
@@ -279,6 +312,41 @@ class AutoEncount(ImageProcPythonCommand):
         # 合致するものがいなかった場合水として返す(デフォルトはハラバリーを使用する)
         print("合致するタイプがないので水タイプとして処理します。")
         return Type.WATER
+    
+    def choose_raidPokemon_type(self, type: Type):
+        # レイドを実行するタイプ
+        execute_raid_type = [
+                        Type.FIRE,
+                        Type.NORMAL,
+                        Type.WATER,
+                        Type.ELECTRIC,
+                        Type.GRASS,
+                        Type.FIGHTING, 
+                        Type.ICE, 
+                        Type.GROUND,
+                        Type.BUG,
+                        Type.FLYING,
+                        Type.POISON, 
+                        Type.ROCK,
+                        Type.PSYCHIC,
+                        Type.GHOST,
+                        Type.DARK, 
+                        Type.STEEL,
+                        Type.DRAGON,
+                        Type.FAIRY
+                        ]
+        # レイドを行わず日付変更するタイプ
+        skip_raid_type = [
+                        ]
+        if type in execute_raid_type:
+            print(type.value + "なのでレイドバトル開始に進みます")
+            return True
+        elif type in skip_raid_type:
+            print(type.value + "なので日付変更を行います")
+            return False
+        else:
+            print("日付変更を行います")
+            return False
 
     def is_capture_pokemon(self):
         POKEMON_DIR = r"C:\PokeCon\Poke-Controller-Modified\SerialController\Template\SV_Suana\capture_pokemons"
@@ -335,9 +403,11 @@ class AutoEncount(ImageProcPythonCommand):
                 self.do()
         print(f"ボックスから{num}匹目を選択。")
         self.wait(1.0)
-        for _ in range(0, num // 7):
+        press_down_count = (num - 1) // 6
+        for _ in range(0, press_down_count):
             self.press(Direction.DOWN, wait=1.0)
-        for _ in range(1, num % 6):
+        press_right_count = (num - 1) % 6
+        for _ in range(0, press_right_count):
             self.press(Direction.RIGHT, wait=1.0)
 
         self.press(Button.A, wait=1)
@@ -404,4 +474,5 @@ class AutoEncount(ImageProcPythonCommand):
         self.press(Button.A, wait=5.0)
         self.press(Button.A, wait=35.0) # ゲーム起動中
         self.press(Button.A, wait=40.0) # ゲーム起動
+        self.dayprogress()
 
